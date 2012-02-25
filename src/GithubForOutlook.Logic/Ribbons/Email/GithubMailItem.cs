@@ -29,6 +29,7 @@ namespace GithubForOutlook.Logic.Ribbons.Email
 
         public void CreateIssue(IRibbonControl control)
         {
+
             MessageBox.Show("Hai");
         }
 

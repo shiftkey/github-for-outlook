@@ -1,5 +1,7 @@
-﻿using System.Windows;
-using System.Windows.Controls;
+﻿using System;
+using System.Windows;
+using GithubForOutlook.Logic.Modules.Settings;
+using GithubForOutlook.Logic.Views;
 using Microsoft.Office.Core;
 using Microsoft.Office.Interop.Outlook;
 using VSTOContrib.Core.RibbonFactory;
@@ -13,12 +15,23 @@ namespace GithubForOutlook.Logic.Ribbons.MainExplorer
     [RibbonViewModel(OutlookRibbonType.OutlookExplorer)]
     public class GithubExplorerRibbon : OfficeViewModelBase, IRibbonViewModel
     {
-        private Explorer explorer;
+        readonly Func<AddNewIssueViewModel> getNewIssueViewModel;
+        readonly Func<SettingsViewModel> getSettingsViewModel;
+
+        Explorer explorer;
+
+        public GithubExplorerRibbon(
+            Func<AddNewIssueViewModel> getNewIssueViewModel,
+            Func<SettingsViewModel> getSettingsViewModel)
+        {
+            this.getNewIssueViewModel = getNewIssueViewModel;
+            this.getSettingsViewModel = getSettingsViewModel;
+        }
 
         public void Initialised(object context)
         {
-        }
 
+        }
 
         private void CleanupFolder()
         {
@@ -27,11 +40,22 @@ namespace GithubForOutlook.Logic.Ribbons.MainExplorer
 
         public void CreateIssue(IRibbonControl ribbonControl)
         {
-            //TODO create proper task window and show it here.. selectedMailItem will be populated properly
-            new Window
-                {
-                    Content = new TextBlock { Text = string.Format("Create issue here for {0}", selectedMailItem.Subject)}
-                }.Show();
+            var viewModel = getNewIssueViewModel();
+            viewModel.Title = selectedMailItem.Subject;
+            var view = new AddNewIssueView { DataContext = viewModel };
+            var window = new Window { Content = view };
+            window.Show();
+
+            viewModel.Initialize();
+        }
+
+        public void ShowSettings(IRibbonControl ribbonControl)
+        {
+            var viewModel = getSettingsViewModel();
+            
+            var view = new SettingsView { DataContext = viewModel };
+            var window = new Window { Content = view };
+            window.Show();
         }
 
         public void CurrentViewChanged(object currentView)
@@ -86,7 +110,7 @@ namespace GithubForOutlook.Logic.Ribbons.MainExplorer
             set
             {
                 mailItemSelected = value;
-                RaisePropertyChanged(()=>MailItemSelected);
+                RaisePropertyChanged(() => MailItemSelected);
             }
         }
 

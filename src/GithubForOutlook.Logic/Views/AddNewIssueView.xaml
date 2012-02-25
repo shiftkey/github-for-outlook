@@ -1,0 +1,67 @@
+﻿<UserControl x:Class="GithubForOutlook.Logic.Views.AddNewIssueView"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid Margin="10">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="Auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <TextBlock Text="Select Project" />
+
+                <ComboBox Grid.Row="1" Margin="0,10" SelectedValuePath="Name" ItemsSource="{Binding Repositories}">
+                    <ComboBox.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <!--<Image Source="{Binding Image}" Width="80" Height="80" />-->
+                                <TextBlock Text="{Binding Name}" VerticalAlignment="Center" />
+                            </StackPanel>
+                        </DataTemplate>
+                    </ComboBox.ItemTemplate>
+                </ComboBox>
+
+            </Grid>
+
+            <TextBlock Grid.Row="1" Text="Title" />
+
+            <TextBox Grid.Row="2" Text="{Binding Title}" />
+
+            <Grid Grid.Row="3">
+                <TextBlock Text="Description" />
+            </Grid>
+
+            <Grid Grid.Row="4">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Horizontal">
+                    <Button Content="Edit" />
+                    <!-- TODO: command to toggle between editor and preview mode -->
+                    <Button Content="Preview" />
+                    <!-- TODO: command to toggle between editor and preview mode -->
+                </StackPanel>
+                <TextBox Grid.Row="1" Text="{Binding Description}" Grid.Column="1" />
+                <!--  TODO: markdown preview -->
+            </Grid>
+
+            <Grid Grid.Row="5">
+                <Button HorizontalAlignment="Right" Content="Submit" Command="{Binding CommitCommand}" />
+            </Grid>
+        </Grid>
+    </Grid>
+</UserControl>

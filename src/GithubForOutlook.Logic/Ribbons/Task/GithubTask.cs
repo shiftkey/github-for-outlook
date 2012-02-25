@@ -71,13 +71,14 @@ namespace GithubForOutlook.Logic.Ribbons.Task
 
         public void RegisterTaskPanes(Register register)
         {
-            githubTaskPane = register(() => new WpfPanelHost
-            {
-                Child = new GithubTaskPanel
-                {
-                    DataContext = this
-                }
-            }, "Github");
+            // NOTE: moving this to a standalone pane for now until i can get the hang of the VSTO addin hooks
+            //githubTaskPane = register(() => new WpfPanelHost
+            //{
+            //    Child = new GithubTaskPanel
+            //    {
+            //        DataContext = this
+            //    }
+            //}, "Github");
             githubTaskPane.Visible = IsGithubTask;
             PanelShown = IsGithubTask;
             githubTaskPane.VisibleChanged += GithubTaskPaneVisibleChanged;

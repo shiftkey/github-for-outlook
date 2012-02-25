@@ -80,6 +80,8 @@
   <ItemGroup>
     <Compile Include="AddinBootstrapper.cs" />
     <Compile Include="GithubTaskAdapter.cs" />
+    <Compile Include="Models\IUserContext.cs" />
+    <Compile Include="Models\Repository.cs" />
     <Compile Include="Models\User.cs" />
     <Compile Include="Modules\Notifications\NotificationsViewModel.cs" />
     <Compile Include="Modules\Settings\SettingsViewModel.cs" />
@@ -87,13 +89,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Ribbons\MainExplorer\GithubExplorerRibbon.cs" />
     <Compile Include="Ribbons\Task\GithubTask.cs" />
-    <Compile Include="Ribbons\Task\GithubTaskPanel.xaml.cs">
-      <DependentUpon>GithubTaskPanel.xaml</DependentUpon>
+    <Compile Include="Views\SettingsView.xaml.cs">
+      <DependentUpon>SettingsView.xaml</DependentUpon>
     </Compile>
     <Compile Include="Ribbons\IRibbonUI.cs" />
     <Compile Include="Ribbons\Email\GithubMailItem.cs" />
     <Compile Include="Services\IGithubService.cs" />
     <Compile Include="Sync\GitTaskSync.cs" />
+    <Compile Include="Views\AddNewIssueView.xaml.cs">
+      <DependentUpon>AddNewIssueView.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Views\AddNewIssueViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
@@ -102,7 +108,11 @@
     <EmbeddedResource Include="Ribbons\Task\GithubTask.xml" />
   </ItemGroup>
   <ItemGroup>
-    <Page Include="Ribbons\Task\GithubTaskPanel.xaml">
+    <Page Include="Views\SettingsView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Views\AddNewIssueView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
