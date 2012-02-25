@@ -1,4 +1,5 @@
 ﻿using System;
+using Analects.SettingsService;
 using GithubForOutlook.Logic.Models;
 using GithubForOutlook.Logic.Modules.Settings;
 using NGitHub;
@@ -15,11 +16,12 @@ namespace GithubForOutlook.Tests.Modules.Settings
         readonly SettingsViewModel viewModel;
         readonly IGitHubOAuthAuthorizer authorizer = Substitute.For<IGitHubOAuthAuthorizer>();
         readonly IGitHubClient client = Substitute.For<IGitHubClient>();
+        readonly ISettingsService settings = Substitute.For<ISettingsService>();
 
         public SettingsViewModelTests()
         {
             client.Users.Returns(Substitute.For<IUserService>());
-            viewModel = new SettingsViewModel(authorizer, client);
+            viewModel = new SettingsViewModel(authorizer, client, settings);
         }
 
         [Fact]

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Windows.Threading;
-using GithubForOutlook.Logic.Models;
+using Analects.SettingsService;
 using NGitHub;
 using NGitHub.Models;
 using VSTOContrib.Core.Wpf;
@@ -15,12 +15,12 @@ namespace GithubForOutlook.Logic.Views
         // TODO: @JakeGinnivan how should we handle potential cross-thread issues?
 
         private readonly IGitHubClient client;
-        private readonly UserContext userContext;
+        private readonly ISettingsService settingsService;
 
-        public AddNewIssueViewModel(IGitHubClient client, UserContext userContext)
+        public AddNewIssueViewModel(IGitHubClient client, ISettingsService settingsService)
         {
             this.client = client;
-            this.userContext = userContext;
+            this.settingsService = settingsService;
         }
 
         private string title;
@@ -50,7 +50,7 @@ namespace GithubForOutlook.Logic.Views
         public void Initialize()
         {
             // TODO: how can we find the # of repos a user has?
-            client.Repositories.GetRepositoriesAsync(userContext.UserName, 1, RepositoryTypes.Public, OnResult, OnError);
+            client.Repositories.GetRepositoriesAsync(settingsService.Get<string>("UserName"), 1, RepositoryTypes.Public, OnResult, OnError);
         }
 
         private void OnError(GitHubException obj)

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Linq;
 using System.Windows.Input;
+using Analects.SettingsService;
 using GithubForOutlook.Logic.Models;
 using NGitHub;
 using NGitHub.Authentication;
@@ -15,13 +15,15 @@ namespace GithubForOutlook.Logic.Modules.Settings
 
     public class SettingsViewModel : OfficeViewModelBase
     {
-        private readonly IGitHubOAuthAuthorizer authorizer;
-        private readonly IGitHubClient client;
+        readonly IGitHubOAuthAuthorizer authorizer;
+        readonly IGitHubClient client;
+        readonly ISettingsService settingsService;
 
-        public SettingsViewModel(IGitHubOAuthAuthorizer authorizer, IGitHubClient client)
+        public SettingsViewModel(IGitHubOAuthAuthorizer authorizer, IGitHubClient client, ISettingsService settingsService)
         {
             this.authorizer = authorizer;
             this.client = client;
+            this.settingsService = settingsService;
         }
 
         private bool trackIssues;
@@ -66,7 +68,8 @@ namespace GithubForOutlook.Logic.Modules.Settings
         {
             // TODO: settings provider
             // TODO: landing page at Code52 to get user to paste auth credentials in
-            var url = authorizer.BuildAuthenticationUrl("9e96382c3109d9f35371", "http://code52.org");
+
+            var url = authorizer.BuildAuthenticationUrl(settingsService.Get<string>("client"), settingsService.Get<string>("redirect"));
             Process.Start(url);
 
             ShowAuthenticateButton = true;
@@ -105,10 +108,9 @@ namespace GithubForOutlook.Logic.Modules.Settings
         {
             var request = new RestRequest("https://github.com/login/oauth/access_token", Method.POST);
 
-            request.AddHeader("Content-Type", "text/html");
-            request.AddParameter("client_id", "9e96382c3109d9f35371");
-            request.AddParameter("redirect_uri", "http://code52.org");
-            request.AddParameter("client_secret", "60d6c49b946ba4ddc52a34aa0dc1cf43e6077ba6");
+            request.AddParameter("client_id", settingsService.Get<string>("client"));
+            request.AddParameter("redirect_uri", settingsService.Get<string>("redirect"));
+            request.AddParameter("client_secret", settingsService.Get<string>("secret"));
             request.AddParameter("code", AuthenticationSecret);
 
             var restClient = new RestClient();
@@ -121,6 +123,7 @@ namespace GithubForOutlook.Logic.Modules.Settings
             {
                 var result = JsonConvert.DeserializeObject<dynamic>(arg1.Content);
                 string token = result.access_token;
+                settingsService.Set("access_token", token);
                 client.Authenticator = new OAuth2UriQueryParameterAuthenticator(token);
                 client.Users.GetAuthenticatedUserAsync(MapUser, LogError);
             }
